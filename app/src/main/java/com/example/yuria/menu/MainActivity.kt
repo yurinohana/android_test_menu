@@ -9,6 +9,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.browse
+import org.jetbrains.anko.email
+import org.jetbrains.anko.sendSMS
+import org.jetbrains.anko.share
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,54 +60,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
-            R.id.sms -> {
-                val number = "999-9999-9999"
-                val uri = Uri.parse("sms:$number")
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = uri
-                intent.putExtra("sms_body", "こんにちは")
-                startActivity(intent)
-                return true
-            }
-            R.id.mail -> {
-                val email: String = "nobody@example.com"
-                val subject: String ="予約問い合わせ"
-                val text: String ="以下の通り予約いたします"
-                val uri = Uri.parse("mailto:")
-                val intent = Intent(Intent.ACTION_SENDTO)
-                intent.apply {
-                    data = uri
-                    putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-                    putExtra(Intent.EXTRA_SUBJECT, subject)
-                    putExtra(Intent.EXTRA_TEXT, text)
-                }
-                if (intent.resolveActivity(packageManager) != null) {
-                    startActivity(intent)
-                }
-                return true
-            }
-            R.id.share -> {
-                val text: String = "美味しいレストランを紹介します．"
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, text)
-                }
-                val chooser = Intent.createChooser(intent, null)
-                if (intent.resolveActivity(packageManager) != null) {
-                    startActivity(chooser)
-                }
-                return true
-            }
-            R.id.browse -> {
-                val url: String = "http://www.yahoo.co.jp/"
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(url)
-                if (intent.resolveActivity(packageManager) != null) {
-                    startActivity(intent)
-                }
-                return true
-            }
+            R.id.sms -> sendSMS("999-9999-9999")
+            R.id.mail -> email("nobody@example.com", "予約問い合わせ", "以下の通り予約致します")
+            R.id.share -> share("美味しいレストランを紹介します．")
+            R.id.browse -> browse("http://google.co.jp")
+            else -> super.onContextItemSelected(item)
         }
         return super.onContextItemSelected(item)
     }
